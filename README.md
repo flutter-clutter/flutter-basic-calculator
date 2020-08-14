@@ -6,4 +6,4 @@ A basic calculator app written in Flutter
 
 # Article
 
-Find the respective tutorial about how everything was created and how it's to be used on https://www.flutterclutter.dev/ 
+Find the respective tutorial about how everything was created and how it's to be used on https://www.flutterclutter.dev/flutter/tutorials/calculator-app/2020/1093/
