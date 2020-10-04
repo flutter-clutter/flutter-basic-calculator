@@ -2,7 +2,6 @@ import 'package:basic_calculator/calculation_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 import 'bloc/calculation_bloc.dart';
 import 'calculator_button.dart';
 import 'result_display.dart';
@@ -14,13 +13,6 @@ class Calculation extends StatefulWidget {
 
 class _CalculationState extends State<Calculation> {
   double width;
-
-  int firstOperand;
-  String operator;
-  int secondOperand;
-  int result;
-
-  CalculationBloc bloc;
 
   @override
   void didChangeDependencies() {
@@ -108,7 +100,7 @@ class _CalculationState extends State<Calculation> {
     }
 
     if (model.secondOperand != null) {
-      return '${model.firstOperand}operator${model.secondOperand}';
+      return '${model.firstOperand}${model.operator}${model.secondOperand}';
     }
 
     if (model.operator != null) {

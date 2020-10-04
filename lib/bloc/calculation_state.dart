@@ -6,7 +6,7 @@ abstract class CalculationState extends Equatable {
   const CalculationState({@required this.calculationModel}) : assert(calculationModel != null);
 
   @override
-  List<Object> get props => [calculationModel.firstOperand, calculationModel.secondOperand, calculationModel.result];
+  List<Object> get props => [calculationModel.firstOperand, calculationModel.operator, calculationModel.secondOperand, calculationModel.result];
 }
 
 class CalculationInitial extends CalculationState {
@@ -21,5 +21,5 @@ class CalculationSuccess extends CalculationState {
         super(calculationModel: calculationModel);
 
   @override
-  List<Object> get props => [calculationModel.firstOperand, calculationModel.secondOperand, calculationModel.operator, calculationModel.result];
+  List<Object> get props => [calculationModel.firstOperand, calculationModel.operator, calculationModel.secondOperand, calculationModel.result];
 }

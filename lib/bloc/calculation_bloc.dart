@@ -19,7 +19,7 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
     if (event is NumberPressed) {
       yield await _mapNumberPressedToState(event);
     }
-    
+
     if (event is OperatorPressed) {
       yield await _mapOperatorPressedToState(event);
     }
@@ -39,68 +39,94 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
     CalculationModel model = state.calculationModel;
 
     if (model.result != null) {
-      model.result = null;
-      model.firstOperand = event.number;
+      CalculationModel newModel = CalculationModel(
+        firstOperand: event.number,
+        operator: model.operator,
+        secondOperand: model.secondOperand,
+        result: null
+      );
 
       return CalculationSuccess(
-        calculationModel: model
+          calculationModel: newModel
       );
     }
-    
+
     if (model.firstOperand == null) {
-      model.firstOperand = event.number;
+      CalculationModel newModel = CalculationModel(
+        firstOperand: event.number,
+        operator: model.operator,
+        secondOperand: model.secondOperand,
+        result: model.result
+      );
 
       return CalculationSuccess(
-        calculationModel: model
+        calculationModel: newModel
       );
     }
-    
+
     if (model.operator == null) {
-      model.firstOperand = int.parse('${state.calculationModel.firstOperand}${event.number}');
+      CalculationModel newModel = CalculationModel(
+        firstOperand: int.parse('${model.firstOperand}${event.number}'),
+        operator: model.operator,
+        secondOperand: model.secondOperand,
+        result: model.result
+      );
 
       return CalculationSuccess(
-        calculationModel: model
+        calculationModel: newModel
       );
     }
-    
+
     if (model.secondOperand == null) {
-      model.secondOperand = event.number;
+      CalculationModel newModel = CalculationModel(
+        firstOperand: model.firstOperand,
+        operator: model.operator,
+        secondOperand: event.number,
+        result: model.result
+      );
 
       return CalculationSuccess(
-        calculationModel: model
+          calculationModel: newModel
       );
     }
-
-    model.secondOperand = int.parse('${state.calculationModel.secondOperand}${event.number}');
 
     return CalculationSuccess(
-      calculationModel: model
+      calculationModel: CalculationModel(
+        firstOperand: model.firstOperand,
+        operator: model.operator,
+        secondOperand: int.parse('${model.secondOperand}${event.number}'),
+        result: model.result
+      )
     );
   }
 
   Future<CalculationState> _mapOperatorPressedToState(
-    OperatorPressed event,
-  ) async {
+      OperatorPressed event,
+      ) async {
     CalculationModel model = state.calculationModel;
-    model.firstOperand = state.calculationModel.firstOperand == null ? 0 : null;
-    model.operator = event.operator;
 
     return CalculationSuccess(
-      calculationModel: model
+      calculationModel: CalculationModel(
+        firstOperand: model.firstOperand == null ? 0 : model.firstOperand,
+        operator: event.operator,
+        secondOperand: model.secondOperand,
+        result: model.result
+      )
     );
   }
 
   Future<CalculationState> _mapCalculateResultToState(
       CalculateResult event,
       ) async {
-    if (state.calculationModel.operator == null || state.calculationModel.secondOperand == null) {
+    CalculationModel model = state.calculationModel;
+
+    if (model.operator == null || model.secondOperand == null) {
       return state;
     }
 
-    CalculationModel model = state.calculationModel;
-    int result = state.calculationModel.result;
+    int result = 0;
 
-    switch (state.calculationModel.operator) {
+    switch (model.operator) {
       case '+':
         result = model.firstOperand + model.secondOperand;
         break;
@@ -118,18 +144,14 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
         break;
     }
 
-    model.result = result;
-
     return CalculationSuccess(
-      calculationModel: model
+      calculationModel: CalculationModel(
+        firstOperand: result,
+        operator: null,
+        secondOperand: null,
+        result: null
+      )
     );
-  }
-
-  @override
-  void onTransition(Transition<CalculationEvent, CalculationState> transition) {
-    log(transition.currentState.calculationModel.toString());
-    log(transition.nextState.calculationModel.toString());
-    super.onTransition(transition);
   }
 
   @override
