@@ -46,7 +46,7 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
         result: null
       );
 
-      return CalculationSuccess(
+      return CalculationChanged(
           calculationModel: newModel
       );
     }
@@ -59,7 +59,7 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
         result: model.result
       );
 
-      return CalculationSuccess(
+      return CalculationChanged(
         calculationModel: newModel
       );
     }
@@ -72,7 +72,7 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
         result: model.result
       );
 
-      return CalculationSuccess(
+      return CalculationChanged(
         calculationModel: newModel
       );
     }
@@ -85,12 +85,12 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
         result: model.result
       );
 
-      return CalculationSuccess(
+      return CalculationChanged(
           calculationModel: newModel
       );
     }
 
-    return CalculationSuccess(
+    return CalculationChanged(
       calculationModel: CalculationModel(
         firstOperand: model.firstOperand,
         operator: model.operator,
@@ -103,9 +103,15 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
   Future<CalculationState> _mapOperatorPressedToState(
       OperatorPressed event,
       ) async {
+    List<String> allowedOperators = ['+', '-', '*', '/'];
+
+    if (!allowedOperators.contains(event.operator)) {
+      return state;
+    }
+
     CalculationModel model = state.calculationModel;
 
-    return CalculationSuccess(
+    return CalculationChanged(
       calculationModel: CalculationModel(
         firstOperand: model.firstOperand == null ? 0 : model.firstOperand,
         operator: event.operator,
@@ -144,7 +150,7 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
         break;
     }
 
-    return CalculationSuccess(
+    return CalculationChanged(
       calculationModel: CalculationModel(
         firstOperand: result,
         operator: null,

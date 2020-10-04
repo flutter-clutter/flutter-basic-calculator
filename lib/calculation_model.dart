@@ -1,4 +1,6 @@
-class CalculationModel {
+import 'package:equatable/equatable.dart';
+
+class CalculationModel extends Equatable {
   CalculationModel({
     this.firstOperand,
     this.operator,
@@ -6,13 +8,16 @@ class CalculationModel {
     this.result = 0,
   });
 
-  int firstOperand;
-  String operator;
-  int secondOperand;
-  int result;
+  final int firstOperand;
+  final String operator;
+  final int secondOperand;
+  final int result;
 
   @override
   String toString() {
     return "$firstOperand$operator$secondOperand=$result";
   }
+
+  @override
+  List<Object> get props => [firstOperand, operator, secondOperand, result];
 }
