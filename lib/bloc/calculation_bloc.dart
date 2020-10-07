@@ -3,11 +3,12 @@ import 'dart:developer';
 
 import 'package:basic_calculator/calculation_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
-part 'calculation_event.dart';
-part 'calculation_state.dart';
+import 'calculation_state.dart';
+import 'calculation_event.dart';
+
+export 'calculation_state.dart';
+export 'calculation_event.dart';
 
 class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
   CalculationBloc() : super(CalculationInitial());
@@ -39,63 +40,41 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
     CalculationModel model = state.calculationModel;
 
     if (model.result != null) {
-      CalculationModel newModel = CalculationModel(
-        firstOperand: event.number,
-        operator: model.operator,
-        secondOperand: model.secondOperand,
-        result: null
+      CalculationModel newModel = model.copyWith(
+        firstOperand: () => event.number,
+        result: () => null
       );
 
-      return CalculationChanged(
-          calculationModel: newModel
-      );
+      return CalculationChanged(calculationModel: newModel);
     }
 
     if (model.firstOperand == null) {
-      CalculationModel newModel = CalculationModel(
-        firstOperand: event.number,
-        operator: model.operator,
-        secondOperand: model.secondOperand,
-        result: model.result
+      CalculationModel newModel = model.copyWith(
+        firstOperand: () => event.number
       );
 
-      return CalculationChanged(
-        calculationModel: newModel
-      );
+      return CalculationChanged(calculationModel: newModel);
     }
 
     if (model.operator == null) {
-      CalculationModel newModel = CalculationModel(
-        firstOperand: int.parse('${model.firstOperand}${event.number}'),
-        operator: model.operator,
-        secondOperand: model.secondOperand,
-        result: model.result
+      CalculationModel newModel = model.copyWith(
+        firstOperand: () => int.parse('${model.firstOperand}${event.number}')
       );
 
-      return CalculationChanged(
-        calculationModel: newModel
-      );
+      return CalculationChanged(calculationModel: newModel);
     }
 
     if (model.secondOperand == null) {
-      CalculationModel newModel = CalculationModel(
-        firstOperand: model.firstOperand,
-        operator: model.operator,
-        secondOperand: event.number,
-        result: model.result
+      CalculationModel newModel = model.copyWith(
+        secondOperand: () => event.number
       );
 
-      return CalculationChanged(
-          calculationModel: newModel
-      );
+      return CalculationChanged(calculationModel: newModel);
     }
 
     return CalculationChanged(
-      calculationModel: CalculationModel(
-        firstOperand: model.firstOperand,
-        operator: model.operator,
-        secondOperand: int.parse('${model.secondOperand}${event.number}'),
-        result: model.result
+      calculationModel: model.copyWith(
+        secondOperand: () =>  int.parse('${model.secondOperand}${event.number}')
       )
     );
   }
@@ -111,19 +90,17 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
 
     CalculationModel model = state.calculationModel;
 
-    return CalculationChanged(
-      calculationModel: CalculationModel(
-        firstOperand: model.firstOperand == null ? 0 : model.firstOperand,
-        operator: event.operator,
-        secondOperand: model.secondOperand,
-        result: model.result
-      )
+    CalculationModel newModel = state.calculationModel.copyWith(
+      firstOperand: () => model.firstOperand == null ? 0 : model.firstOperand,
+      operator: () => event.operator
     );
+
+    return CalculationChanged(calculationModel: newModel);
   }
 
   Future<CalculationState> _mapCalculateResultToState(
       CalculateResult event,
-      ) async {
+    ) async {
     CalculationModel model = state.calculationModel;
 
     if (model.operator == null || model.secondOperand == null) {
@@ -144,20 +121,21 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
         break;
       case '/':
         if (model.secondOperand == 0) {
-          return state;
+          CalculationModel resultModel = CalculationInitial().calculationModel.copyWith(
+            firstOperand: () => 0
+          );
+
+          return CalculationChanged(calculationModel: resultModel);
         }
         result = model.firstOperand ~/ model.secondOperand;
         break;
     }
 
-    return CalculationChanged(
-      calculationModel: CalculationModel(
-        firstOperand: result,
-        operator: null,
-        secondOperand: null,
-        result: null
-      )
+    CalculationModel newModel = CalculationInitial().calculationModel.copyWith(
+      firstOperand: () => result
     );
+
+    return CalculationChanged(calculationModel: newModel);
   }
 
   @override

@@ -1,4 +1,7 @@
-part of 'calculation_bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
+
+import '../calculation_model.dart';
 
 abstract class CalculationState extends Equatable {
   final CalculationModel calculationModel;
@@ -17,8 +20,8 @@ class CalculationChanged extends CalculationState {
   final CalculationModel calculationModel;
 
   const CalculationChanged({@required this.calculationModel})
-      : assert(calculationModel != null),
-        super(calculationModel: calculationModel);
+    : assert(calculationModel != null),
+      super(calculationModel: calculationModel);
 
   @override
   List<Object> get props => [calculationModel];

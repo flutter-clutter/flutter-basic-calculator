@@ -67,7 +67,6 @@ class _CalculationState extends State<Calculation> {
     );
   }
 
-
   Widget _getButton({String text, Function onTap, Color backgroundColor = Colors.white, Color textColor = Colors.black}) {
     return CalculatorButton(
       label: text,
@@ -111,6 +110,6 @@ class _CalculationState extends State<Calculation> {
       return '${model.firstOperand}';
     }
 
-    return "${model.result}";
+    return "${model.result ?? 0}";
   }
 }
