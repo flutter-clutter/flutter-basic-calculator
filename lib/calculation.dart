@@ -1,5 +1,8 @@
+import 'package:basic_calculator/calculation_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'bloc/calculation_bloc.dart';
 import 'calculator_button.dart';
 import 'result_display.dart';
 
@@ -11,11 +14,6 @@ class Calculation extends StatefulWidget {
 class _CalculationState extends State<Calculation> {
   double width;
 
-  int firstOperand;
-  String operator;
-  int secondOperand;
-  int result;
-
   @override
   void didChangeDependencies() {
     width = MediaQuery.of(context).size.width;
@@ -26,8 +24,12 @@ class _CalculationState extends State<Calculation> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ResultDisplay(
-          text: _getDisplayText(),
+        BlocBuilder<CalculationBloc, CalculationState>(
+          builder: (context, CalculationState state) {
+            return ResultDisplay(
+              text: _getDisplayText(state.calculationModel),
+            );
+          },
         ),
         Row(
           children: [
@@ -65,7 +67,6 @@ class _CalculationState extends State<Calculation> {
     );
   }
 
-
   Widget _getButton({String text, Function onTap, Color backgroundColor = Colors.white, Color textColor = Colors.black}) {
     return CalculatorButton(
       label: text,
@@ -77,94 +78,38 @@ class _CalculationState extends State<Calculation> {
   }
 
   numberPressed(int number) {
-    setState(() {
-      if (result != null) {
-        result = null;
-        firstOperand = number;
-        return;
-      }
-      if (firstOperand == null) {
-        firstOperand = number;
-        return;
-      }
-      if (operator == null) {
-        firstOperand = int.parse('$firstOperand$number');
-        return;
-      }
-      if (secondOperand == null) {
-        secondOperand = number;
-        return;
-      }
-
-      secondOperand = int.parse('$secondOperand$number');
-    });
+    context.bloc<CalculationBloc>().add(NumberPressed(number: number));
   }
 
   operatorPressed(String operator) {
-    setState(() {
-      if (firstOperand == null) {
-        firstOperand = 0;
-      }
-      this.operator = operator;
-    });
+    context.bloc<CalculationBloc>().add(OperatorPressed(operator: operator));
   }
 
   calculateResult() {
-    if (operator == null || secondOperand == null) {
-      return;
-    }
-    setState(() {
-      switch (operator) {
-        case '+':
-          result = firstOperand + secondOperand;
-          break;
-        case '-':
-          result = firstOperand - secondOperand;
-          break;
-        case '*':
-          result = firstOperand * secondOperand;
-          break;
-        case '/':
-          if (secondOperand == 0) {
-            return;
-          }
-          result = firstOperand ~/ secondOperand;
-          break;
-      }
-
-      firstOperand = result;
-      operator = null;
-      secondOperand = null;
-      result = null;
-    });
+    context.bloc<CalculationBloc>().add(CalculateResult());
   }
 
   clear() {
-    setState(() {
-      result = null;
-      operator = null;
-      secondOperand = null;
-      firstOperand = null;
-    });
+    context.bloc<CalculationBloc>().add(ClearCalculation());
   }
 
-  String _getDisplayText() {
-    if (result != null) {
-      return '$result';
+  String _getDisplayText(CalculationModel model) {
+    if (model.result != null) {
+      return '${model.result}';
     }
 
-    if (secondOperand != null) {
-      return '$firstOperand$operator$secondOperand';
+    if (model.secondOperand != null) {
+      return '${model.firstOperand}${model.operator}${model.secondOperand}';
     }
 
-    if (operator != null) {
-      return '$firstOperand$operator';
+    if (model.operator != null) {
+      return '${model.firstOperand}${model.operator}';
     }
 
-    if (firstOperand != null) {
-      return '$firstOperand';
+    if (model.firstOperand != null) {
+      return '${model.firstOperand}';
     }
 
-    return '0';
+    return "${model.result ?? 0}";
   }
 }

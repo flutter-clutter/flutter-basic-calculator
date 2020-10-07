@@ -1,6 +1,7 @@
+import 'package:basic_calculator/bloc/calculation_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'calculation.dart';
 
 void main() {
@@ -30,7 +31,12 @@ class _CalculatorAppState extends State<CalculatorApp> {
       debugShowCheckedModeBanner: false,
       title: 'Flutter basic calculator',
       home: Scaffold(
-        body: Calculation()
+        body: BlocProvider(
+          create: (context) {
+            return CalculationBloc();
+          },
+          child: Calculation(),
+        ),
       ),
     );
   }
