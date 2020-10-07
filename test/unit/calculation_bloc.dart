@@ -17,12 +17,12 @@ void main() {
       act: (bloc) => bloc.add(NumberPressed(number: 1)),
       expect: [
         CalculationChanged(
-            calculationModel: CalculationModel(
-              firstOperand: 1,
-              operator: null,
-              secondOperand: null,
-              result: null,
-            )
+          calculationModel: CalculationModel(
+            firstOperand: 1,
+            operator: null,
+            secondOperand: null,
+            result: null,
+          )
         )
       ],
     );
@@ -286,7 +286,7 @@ void main() {
     );
 
     blocTest(
-      'dividing by zero does not do anything',
+      'dividing by zero results in a calculation with result: 0',
       build: () {
         CalculationBloc bloc = CalculationBloc();
         bloc.add(NumberPressed(number: 123));
@@ -295,8 +295,19 @@ void main() {
         return bloc;
       } ,
       skip: 3,
-      act: (bloc) => bloc.add(CalculateResult()),
-      expect: [],
+      act: (bloc) => bloc.add(
+        CalculateResult()
+      ),
+      expect: [
+        CalculationChanged(
+          calculationModel: CalculationModel(
+            firstOperand: 0,
+            operator: null,
+            secondOperand: null,
+            result: null
+          ),
+        )
+      ],
     );
   });
 }
