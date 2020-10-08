@@ -103,8 +103,6 @@ void main() {
       ],
     );
 
-
-
     blocTest(
       'first operand is concatenated when number pressed repeatedly',
       build: () {
@@ -123,6 +121,29 @@ void main() {
               firstOperand: 1,
               operator: '+',
               secondOperand: 337,
+              result: null,
+            )
+        )
+      ],
+    );
+
+    blocTest(
+      'first operand is not concatenated when repeated number starts with zero',
+      build: () {
+        CalculationBloc bloc = CalculationBloc();
+        bloc.add(NumberPressed(number: 0));
+        bloc.add(NumberPressed(number: 0));
+        bloc.add(OperatorPressed(operator: '+'));
+        return bloc;
+      } ,
+      skip: 2,
+      act: (bloc) => bloc.add(NumberPressed(number: 0)),
+      expect: [
+        CalculationChanged(
+            calculationModel: CalculationModel(
+              firstOperand: 0,
+              operator: '+',
+              secondOperand: 0,
               result: null,
             )
         )
