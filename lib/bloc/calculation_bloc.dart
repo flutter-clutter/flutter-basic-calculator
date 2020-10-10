@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:basic_calculator/calculation_model.dart';
+import 'package:basic_calculator/services/calculation_history_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meta/meta.dart';
 
 import 'calculation_state.dart';
 import 'calculation_event.dart';
@@ -11,7 +13,11 @@ export 'calculation_state.dart';
 export 'calculation_event.dart';
 
 class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
-  CalculationBloc() : super(CalculationInitial());
+  CalculationBloc({
+    @required this.calculationHistoryService
+  }) : assert(calculationHistoryService != null), super(CalculationInitial());
+
+  CalculationHistoryService calculationHistoryService;
 
   @override
   Stream<CalculationState> mapEventToState(
@@ -26,11 +32,23 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
     }
 
     if (event is CalculateResult) {
-      yield await _mapCalculateResultToState(event);
+      yield* _mapCalculateResultToState(event);
     }
 
     if (event is ClearCalculation) {
-      yield CalculationInitial();
+      CalculationModel resultModel = CalculationInitial().calculationModel.copyWith();
+
+      yield CalculationChanged(
+        calculationModel: resultModel,
+        history: state.history
+      );
+    }
+
+    if (event is FetchHistory) {
+      yield CalculationChanged(
+        calculationModel: state.calculationModel,
+        history: await calculationHistoryService.fetchAllEntries()
+      );
     }
   }
 
@@ -45,7 +63,10 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
         result: () => null
       );
 
-      return CalculationChanged(calculationModel: newModel);
+      return CalculationChanged(
+        calculationModel: newModel,
+        history: List.of(state.history)
+      );
     }
 
     if (model.firstOperand == null) {
@@ -53,7 +74,10 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
         firstOperand: () => event.number
       );
 
-      return CalculationChanged(calculationModel: newModel);
+      return CalculationChanged(
+        calculationModel: newModel,
+        history: List.of(state.history)
+      );
     }
 
     if (model.operator == null) {
@@ -61,7 +85,10 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
         firstOperand: () => int.parse('${model.firstOperand}${event.number}')
       );
 
-      return CalculationChanged(calculationModel: newModel);
+      return CalculationChanged(
+        calculationModel: newModel,
+        history: List.of(state.history)
+      );
     }
 
     if (model.secondOperand == null) {
@@ -69,13 +96,17 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
         secondOperand: () => event.number
       );
 
-      return CalculationChanged(calculationModel: newModel);
+      return CalculationChanged(
+        calculationModel: newModel,
+        history: List.of(state.history)
+      );
     }
 
     return CalculationChanged(
       calculationModel: model.copyWith(
         secondOperand: () =>  int.parse('${model.secondOperand}${event.number}')
-      )
+      ),
+      history: List.of(state.history)
     );
   }
 
@@ -95,16 +126,20 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
       operator: () => event.operator
     );
 
-    return CalculationChanged(calculationModel: newModel);
+    return CalculationChanged(
+      calculationModel: newModel,
+      history: List.of(state.history)
+    );
   }
 
-  Future<CalculationState> _mapCalculateResultToState(
+  Stream<CalculationState> _mapCalculateResultToState(
       CalculateResult event,
-    ) async {
+    ) async* {
     CalculationModel model = state.calculationModel;
 
     if (model.operator == null || model.secondOperand == null) {
-      return state;
+      yield state;
+      return;
     }
 
     int result = 0;
@@ -121,13 +156,11 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
         break;
       case '/':
         if (model.secondOperand == 0) {
-          CalculationModel resultModel = CalculationInitial().calculationModel.copyWith(
-            firstOperand: () => 0
-          );
-
-          return CalculationChanged(calculationModel: resultModel);
+          result = 0;
         }
-        result = model.firstOperand ~/ model.secondOperand;
+        else {
+          result = model.firstOperand ~/ model.secondOperand;
+        }
         break;
     }
 
@@ -135,7 +168,24 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
       firstOperand: () => result
     );
 
-    return CalculationChanged(calculationModel: newModel);
+    yield CalculationChanged(
+      calculationModel: newModel,
+      history: List.of(state.history)
+    );
+
+    yield* _yieldHistoryStorageResult(model, newModel);
+
+  }
+
+  Stream<CalculationStored> _yieldHistoryStorageResult(CalculationModel model, CalculationModel newModel) async* {
+    CalculationModel resultModel = model.copyWith(result: () => newModel.firstOperand);
+
+    if(await calculationHistoryService.addEntry(resultModel)) {
+      yield CalculationStored(
+        calculationModel: newModel,
+        history: calculationHistoryService.fetchAllEntries()
+      );
+    }
   }
 
   @override
