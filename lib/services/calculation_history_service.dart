@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../calculation_model.dart';
 
 class CalculationHistoryService {
+  static String _sharedPreferenceKey = 'calculation_history';
+
   CalculationHistoryService({
     @required this.sharedPreferences
   }) : assert (sharedPreferences != null);
@@ -15,17 +17,17 @@ class CalculationHistoryService {
   List<CalculationModel> fetchAllEntries() {
     List<CalculationModel> result = <CalculationModel>[];
 
-    if (!sharedPreferences.containsKey('calculation_history')) {
+    if (!sharedPreferences.containsKey(_sharedPreferenceKey)) {
       return [];
     }
 
     List<dynamic> history = jsonDecode(
-        sharedPreferences.getString('calculation_history')
+        sharedPreferences.getString(_sharedPreferenceKey)
     );
 
-    for (var entry in history) {
+    for (Map<String, dynamic> entry in history) {
       result.add(
-          CalculationModel.fromJson(entry)
+        CalculationModel.fromJson(entry)
       );
     };
 
@@ -37,7 +39,7 @@ class CalculationHistoryService {
     allEntries.add(model);
 
     return sharedPreferences.setString(
-      'calculation_history',
+      _sharedPreferenceKey,
       jsonEncode(allEntries)
     );
   }
