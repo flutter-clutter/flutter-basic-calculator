@@ -40,14 +40,14 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
 
       yield CalculationChanged(
         calculationModel: resultModel,
-        history: state.history
+        history: List.of(state.history)
       );
     }
 
     if (event is FetchHistory) {
       yield CalculationChanged(
         calculationModel: state.calculationModel,
-        history: await calculationHistoryService.fetchAllEntries()
+        history: calculationHistoryService.fetchAllEntries()
       );
     }
   }
@@ -174,14 +174,13 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
     );
 
     yield* _yieldHistoryStorageResult(model, newModel);
-
   }
 
-  Stream<CalculationStored> _yieldHistoryStorageResult(CalculationModel model, CalculationModel newModel) async* {
+  Stream<CalculationChanged> _yieldHistoryStorageResult(CalculationModel model, CalculationModel newModel) async* {
     CalculationModel resultModel = model.copyWith(result: () => newModel.firstOperand);
 
     if(await calculationHistoryService.addEntry(resultModel)) {
-      yield CalculationStored(
+      yield CalculationChanged(
         calculationModel: newModel,
         history: calculationHistoryService.fetchAllEntries()
       );

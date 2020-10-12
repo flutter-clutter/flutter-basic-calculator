@@ -21,9 +21,15 @@ class CalculationHistoryService {
       return [];
     }
 
-    List<dynamic> history = jsonDecode(
-        sharedPreferences.getString(_sharedPreferenceKey)
-    );
+    List<dynamic> history = [];
+
+    try {
+      history = jsonDecode(
+          sharedPreferences.getString(_sharedPreferenceKey)
+      );
+    } on FormatException {
+      sharedPreferences.remove(_sharedPreferenceKey);
+    }
 
     for (Map<String, dynamic> entry in history) {
       result.add(

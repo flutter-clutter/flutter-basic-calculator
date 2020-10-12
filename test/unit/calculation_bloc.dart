@@ -431,7 +431,7 @@ void main() {
           ),
           history: []
         ),
-        CalculationStored(
+        CalculationChanged(
           calculationModel: CalculationModel(
             firstOperand: 246,
             operator: null,

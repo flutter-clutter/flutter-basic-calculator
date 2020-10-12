@@ -34,18 +34,3 @@ class CalculationChanged extends CalculationState {
   @override
   List<Object> get props => [calculationModel, history];
 }
-
-class CalculationStored extends CalculationState {
-  final CalculationModel calculationModel;
-  final List<CalculationModel> history;
-
-  const CalculationStored({
-    @required this.calculationModel,
-    @required this.history
-  })
-    : assert(calculationModel != null),
-      super(calculationModel: calculationModel, history: history);
-
-  @override
-  List<Object> get props => [calculationModel, history];
-}
