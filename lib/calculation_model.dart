@@ -28,6 +28,20 @@ class CalculationModel extends Equatable {
     );
   }
 
+  CalculationModel.fromJson(Map<String, dynamic> json)
+      : firstOperand = json['firstOperand'],
+        operator = json['operator'],
+        secondOperand = json['secondOperand'],
+        result = json['result'];
+
+  Map<String, dynamic> toJson() =>
+      {
+        'firstOperand': firstOperand,
+        'operator': operator,
+        'secondOperand': secondOperand,
+        'result': result,
+      };
+
   @override
   String toString() {
     return "$firstOperand$operator$secondOperand=$result";

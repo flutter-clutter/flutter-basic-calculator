@@ -32,3 +32,8 @@ class ClearCalculation extends CalculationEvent {
   @override
   List<Object> get props =>  [];
 }
+
+class FetchHistory extends CalculationEvent {
+  @override
+  List<Object> get props =>  [];
+}

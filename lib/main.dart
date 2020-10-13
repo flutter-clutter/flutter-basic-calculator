@@ -2,15 +2,30 @@ import 'package:basic_calculator/bloc/calculation_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'calculation.dart';
+import 'services/calculation_history_service.dart';
 
-void main() {
-  runApp(CalculatorApp());
+main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  runApp(
+    CalculatorApp(
+      sharedPreferences: sharedPreferences
+    )
+  );
 }
 
 class CalculatorApp extends StatefulWidget {
+  CalculatorApp({
+    this.sharedPreferences
+  });
+
+  final SharedPreferences sharedPreferences;
+
   @override
-  _CalculatorAppState createState() => _CalculatorAppState();
+  _CalculatorAppState createState() => _CalculatorAppState(
+  );
 }
 
 class _CalculatorAppState extends State<CalculatorApp> {
@@ -33,7 +48,11 @@ class _CalculatorAppState extends State<CalculatorApp> {
       home: Scaffold(
         body: BlocProvider(
           create: (context) {
-            return CalculationBloc();
+            return CalculationBloc(
+              calculationHistoryService: CalculationHistoryService(
+                sharedPreferences: widget.sharedPreferences
+              )
+            );
           },
           child: Calculation(),
         ),
