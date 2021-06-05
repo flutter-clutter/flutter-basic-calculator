@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:basic_calculator/calculation_model.dart';
 import 'package:basic_calculator/services/calculation_history_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'calculation_state.dart';
 import 'calculation_event.dart';
@@ -14,8 +13,8 @@ export 'calculation_event.dart';
 
 class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
   CalculationBloc({
-    @required this.calculationHistoryService
-  }) : assert(calculationHistoryService != null), super(CalculationInitial());
+    required this.calculationHistoryService
+  }) : super(CalculationInitial());
 
   CalculationHistoryService calculationHistoryService;
 
@@ -146,20 +145,20 @@ class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
 
     switch (model.operator) {
       case '+':
-        result = model.firstOperand + model.secondOperand;
+        result = model.firstOperand! + model.secondOperand!;
         break;
       case '-':
-        result = model.firstOperand - model.secondOperand;
+        result = model.firstOperand! - model.secondOperand!;
         break;
       case '*':
-        result = model.firstOperand * model.secondOperand;
+        result = model.firstOperand! * model.secondOperand!;
         break;
       case '/':
         if (model.secondOperand == 0) {
           result = 0;
         }
         else {
-          result = model.firstOperand ~/ model.secondOperand;
+          result = model.firstOperand! ~/ model.secondOperand!;
         }
         break;
     }

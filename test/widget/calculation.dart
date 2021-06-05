@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter/material.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
 class MockCalculationHistoryService extends Mock implements CalculationHistoryService {}
 
@@ -17,8 +17,8 @@ class MockCalculationHistoryService extends Mock implements CalculationHistorySe
 void main() {
   group('Calculation Widget', ()
   {
-    final TestWidgetsFlutterBinding binding = TestWidgetsFlutterBinding
-        .ensureInitialized();
+    final binding = TestWidgetsFlutterBinding
+        .ensureInitialized() as TestWidgetsFlutterBinding;
 
     testWidgets('Display shows "0" initially', (WidgetTester tester) async {
       await _setSize(binding);
@@ -211,9 +211,10 @@ void main() {
       await _setSize(binding);
 
       CalculationHistoryService mock = MockCalculationHistoryService();
-      when(mock.addEntry(any))
+      // @ToDo: What is any?
+      when(() => mock.addEntry(any()))
           .thenAnswer((realInvocation) async => true);
-      when(mock.fetchAllEntries())
+      when(() => mock.fetchAllEntries())
           .thenAnswer((realInvocation) =>
       [
         CalculationModel(
@@ -254,9 +255,9 @@ void main() {
 MaterialApp _getAppWithMockedSharedPreferences() {
   CalculationHistoryService mock = MockCalculationHistoryService();
 
-  when(mock.addEntry(any))
+  when(() => mock.addEntry(any()))
       .thenAnswer((realInvocation) async => true);
-  when(mock.fetchAllEntries())
+  when(() => mock.fetchAllEntries())
       .thenAnswer((realInvocation) => [
     CalculationModel(
         firstOperand: 3,

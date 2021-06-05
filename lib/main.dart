@@ -18,7 +18,7 @@ main() async {
 
 class CalculatorApp extends StatefulWidget {
   CalculatorApp({
-    this.sharedPreferences
+    required this.sharedPreferences
   });
 
   final SharedPreferences sharedPreferences;

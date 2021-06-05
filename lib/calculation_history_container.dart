@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class CalculationHistoryContainer extends StatelessWidget{
   CalculationHistoryContainer({
-    @required this.calculations
+    required this.calculations
   });
 
   final List<CalculationModel> calculations;

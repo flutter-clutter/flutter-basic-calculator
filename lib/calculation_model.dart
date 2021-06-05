@@ -8,16 +8,16 @@ class CalculationModel extends Equatable {
     this.result,
   });
 
-  final int firstOperand;
-  final String operator;
-  final int secondOperand;
-  final int result;
+  final int? firstOperand;
+  final String? operator;
+  final int? secondOperand;
+  final int? result;
 
   CalculationModel copyWith({
-      int Function() firstOperand,
-      String Function() operator,
-      int Function() secondOperand,
-      int Function() result
+      int? Function()? firstOperand,
+      String? Function()? operator,
+      int? Function()? secondOperand,
+      int? Function()? result
     })
   {
     return CalculationModel(
@@ -48,5 +48,5 @@ class CalculationModel extends Equatable {
   }
 
   @override
-  List<Object> get props => [firstOperand, operator, secondOperand, result];
+  List<Object?> get props => [firstOperand, operator, secondOperand, result];
 }

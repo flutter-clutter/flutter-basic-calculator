@@ -3,8 +3,7 @@ import 'package:basic_calculator/calculation_model.dart';
 import 'package:basic_calculator/services/calculation_history_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bloc_test/bloc_test.dart';
-import 'package:mockito/mockito.dart';
-
+import 'package:mocktail/mocktail.dart';
 class MockCalculationHistoryService extends Mock implements CalculationHistoryService {}
 
 
@@ -15,7 +14,7 @@ void main() {
       build: () => CalculationBloc(
         calculationHistoryService: MockCalculationHistoryService()
       ),
-      expect: [],
+      expect: () => [],
     );
 
     blocTest(
@@ -23,8 +22,8 @@ void main() {
       build: () => CalculationBloc(
         calculationHistoryService: MockCalculationHistoryService()
       ),
-      act: (bloc) => bloc.add(NumberPressed(number: 1)),
-      expect: [
+      act: (CalculationBloc bloc) => bloc.add(NumberPressed(number: 1)),
+      expect: () => [
         CalculationChanged(
           calculationModel: CalculationModel(
             firstOperand: 1,
@@ -47,8 +46,8 @@ void main() {
         return bloc;
       } ,
       skip: 1,
-      act: (bloc) => bloc.add(NumberPressed(number: 1)),
-      expect: [
+      act: (CalculationBloc bloc) => bloc.add(NumberPressed(number: 1)),
+      expect: () => [
         CalculationChanged(
             calculationModel: CalculationModel(
               firstOperand: 11,
@@ -71,8 +70,8 @@ void main() {
         return bloc;
       } ,
       skip: 1,
-      act: (bloc) => bloc.add(OperatorPressed(operator: '+')),
-      expect: [
+      act: (CalculationBloc bloc) => bloc.add(OperatorPressed(operator: '+')),
+      expect: () => [
         CalculationChanged(
           calculationModel: CalculationModel(
             firstOperand: 1,
@@ -95,8 +94,8 @@ void main() {
         return bloc;
       } ,
       skip: 1,
-      act: (bloc) => bloc.add(OperatorPressed(operator: 'x')),
-      expect: [],
+      act: (CalculationBloc bloc) => bloc.add(OperatorPressed(operator: 'x')),
+      expect: () => [],
     );
 
     blocTest(
@@ -110,8 +109,8 @@ void main() {
         return bloc;
       } ,
       skip: 2,
-      act: (bloc) => bloc.add(NumberPressed(number: 2)),
-      expect: [
+      act: (CalculationBloc bloc) => bloc.add(NumberPressed(number: 2)),
+      expect: () => [
         CalculationChanged(
           calculationModel: CalculationModel(
             firstOperand: 1,
@@ -137,8 +136,8 @@ void main() {
         return bloc;
       } ,
       skip: 4,
-      act: (bloc) => bloc.add(NumberPressed(number: 7)),
-      expect: [
+      act: (CalculationBloc bloc) => bloc.add(NumberPressed(number: 7)),
+      expect: () => [
         CalculationChanged(
           calculationModel: CalculationModel(
             firstOperand: 1,
@@ -163,8 +162,8 @@ void main() {
         return bloc;
       } ,
       skip: 2,
-      act: (bloc) => bloc.add(NumberPressed(number: 0)),
-      expect: [
+      act: (CalculationBloc bloc) => bloc.add(NumberPressed(number: 0)),
+      expect: () => [
         CalculationChanged(
           calculationModel: CalculationModel(
             firstOperand: 0,
@@ -189,8 +188,8 @@ void main() {
         return bloc;
       } ,
       skip: 3,
-      act: (bloc) => bloc.add(CalculateResult()),
-      expect: [
+      act: (CalculationBloc bloc) => bloc.add(CalculateResult()),
+      expect: () => [
         CalculationChanged(
           calculationModel: CalculationModel(
             firstOperand: 433,
@@ -213,8 +212,8 @@ void main() {
         return bloc;
       } ,
       skip: 2,
-      act: (bloc) => bloc.add(CalculateResult()),
-      expect: [],
+      act: (CalculationBloc bloc) => bloc.add(CalculateResult()),
+      expect: () => [],
     );
 
     blocTest(
@@ -228,8 +227,8 @@ void main() {
         return bloc;
       } ,
       skip: 2,
-      act: (bloc) => bloc.add(CalculateResult()),
-      expect: [],
+      act: (CalculationBloc bloc) => bloc.add(CalculateResult()),
+      expect: () => [],
     );
 
     blocTest(
@@ -244,8 +243,8 @@ void main() {
         return bloc;
       } ,
       skip: 3,
-      act: (bloc) => bloc.add(ClearCalculation()),
-      expect: [
+      act: (CalculationBloc bloc) => bloc.add(ClearCalculation()),
+      expect: () => [
         CalculationChanged(
           calculationModel: CalculationModel(
             firstOperand: null,
@@ -270,8 +269,8 @@ void main() {
         return bloc;
       } ,
       skip: 3,
-      act: (bloc) => bloc.add(CalculateResult()),
-      expect: [
+      act: (CalculationBloc bloc) => bloc.add(CalculateResult()),
+      expect: () => [
         CalculationChanged(
           calculationModel: CalculationModel(
             firstOperand: 133,
@@ -296,8 +295,8 @@ void main() {
         return bloc;
       } ,
       skip: 3,
-      act: (bloc) => bloc.add(CalculateResult()),
-      expect: [
+      act: (CalculationBloc bloc) => bloc.add(CalculateResult()),
+      expect: () => [
         CalculationChanged(
           calculationModel: CalculationModel(
             firstOperand: 113,
@@ -322,8 +321,8 @@ void main() {
         return bloc;
       } ,
       skip: 3,
-      act: (bloc) => bloc.add(CalculateResult()),
-      expect: [
+      act: (CalculationBloc bloc) => bloc.add(CalculateResult()),
+      expect: () => [
         CalculationChanged(
           calculationModel: CalculationModel(
             firstOperand: 1230,
@@ -348,8 +347,8 @@ void main() {
         return bloc;
       } ,
       skip: 3,
-      act: (bloc) => bloc.add(CalculateResult()),
-      expect: [
+      act: (CalculationBloc bloc) => bloc.add(CalculateResult()),
+      expect: () => [
         CalculationChanged(
           calculationModel: CalculationModel(
             firstOperand: 12,
@@ -374,10 +373,10 @@ void main() {
         return bloc;
       } ,
       skip: 3,
-      act: (bloc) => bloc.add(
+      act: (CalculationBloc bloc) => bloc.add(
         CalculateResult()
       ),
-      expect: [
+      expect: () => [
         CalculationChanged(
           calculationModel: CalculationModel(
             firstOperand: 0,
@@ -400,9 +399,9 @@ void main() {
           secondOperand: 123,
           result: 246,
         );
-        when(mock.fetchAllEntries())
+        when(() => mock.fetchAllEntries())
         .thenAnswer((realInvocation) => [expectedResultModel]);
-        when(mock.addEntry(any))
+        when(() => mock.addEntry(any()))
         .thenAnswer((realInvocation) async => true);
 
         CalculationBloc bloc = CalculationBloc(
@@ -414,14 +413,14 @@ void main() {
         return bloc;
       } ,
       skip: 3,
-      act: (bloc) => bloc.add(
+      act: (CalculationBloc bloc) => bloc.add(
         CalculateResult()
       ),
       verify: (CalculationBloc bloc) {
-        verify(bloc.calculationHistoryService.fetchAllEntries()).called(1);
-        verify(bloc.calculationHistoryService.addEntry(any)).called(1);
+        verify(() => bloc.calculationHistoryService.fetchAllEntries()).called(1);
+        verify(() => bloc.calculationHistoryService.addEntry(any())).called(1);
       },
-      expect: [
+      expect: () => [
         CalculationChanged(
           calculationModel: CalculationModel(
             firstOperand: 246,
