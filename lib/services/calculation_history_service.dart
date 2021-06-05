@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../calculation_model.dart';
@@ -9,8 +8,8 @@ class CalculationHistoryService {
   static String _sharedPreferenceKey = 'calculation_history';
 
   CalculationHistoryService({
-    @required this.sharedPreferences
-  }) : assert (sharedPreferences != null);
+    required this.sharedPreferences
+  });
 
   SharedPreferences sharedPreferences;
 
@@ -25,7 +24,7 @@ class CalculationHistoryService {
 
     try {
       history = jsonDecode(
-          sharedPreferences.getString(_sharedPreferenceKey)
+          sharedPreferences.getString(_sharedPreferenceKey)!
       );
     } on FormatException {
       sharedPreferences.remove(_sharedPreferenceKey);
@@ -35,7 +34,7 @@ class CalculationHistoryService {
       result.add(
         CalculationModel.fromJson(entry)
       );
-    };
+    }
 
     return result;
   }

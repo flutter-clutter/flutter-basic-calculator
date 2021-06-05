@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ResultDisplay extends StatelessWidget {
   ResultDisplay({
-    @required this.text
+    required this.text
   });
 
   final String text;
