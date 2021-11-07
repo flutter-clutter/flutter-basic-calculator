@@ -8,23 +8,18 @@ class CalculationModel extends Equatable {
     this.result,
   });
 
-  final int firstOperand;
-  final String operator;
-  final int secondOperand;
-  final int result;
+  final int? firstOperand;
+  final String? operator;
+  final int? secondOperand;
+  final int? result;
 
-  CalculationModel copyWith({
-      int Function() firstOperand,
-      String Function() operator,
-      int Function() secondOperand,
-      int Function() result
-    })
-  {
+  CalculationModel copyWith(
+      {int? firstOperand, String? operator, int? secondOperand, int? result}) {
     return CalculationModel(
-      firstOperand: firstOperand?.call() ?? this.firstOperand,
-      operator: operator?.call() ?? this.operator,
-      secondOperand: secondOperand?.call() ?? this.secondOperand,
-      result: result?.call() ?? this.result,
+      firstOperand: firstOperand ?? this.firstOperand,
+      operator: operator ?? this.operator,
+      secondOperand: secondOperand ?? this.secondOperand,
+      result: result ?? this.result,
     );
   }
 
@@ -34,8 +29,7 @@ class CalculationModel extends Equatable {
         secondOperand = json['secondOperand'],
         result = json['result'];
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'firstOperand': firstOperand,
         'operator': operator,
         'secondOperand': secondOperand,
@@ -48,5 +42,10 @@ class CalculationModel extends Equatable {
   }
 
   @override
-  List<Object> get props => [firstOperand, operator, secondOperand, result];
+  List<Object?> get props => <Object?>[
+        firstOperand,
+        operator,
+        secondOperand,
+        result,
+      ];
 }

@@ -5,38 +5,37 @@ import 'package:basic_calculator/calculation_model.dart';
 import 'package:basic_calculator/calculator_button.dart';
 import 'package:basic_calculator/result_display.dart';
 import 'package:basic_calculator/services/calculation_history_service.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
-import 'package:flutter/material.dart';
-import 'package:mockito/mockito.dart';
-
-class MockCalculationHistoryService extends Mock implements CalculationHistoryService {}
-
+class MockCalculationHistoryService extends Mock
+    implements CalculationHistoryService {}
 
 void main() {
-  group('Calculation Widget', ()
-  {
-    final TestWidgetsFlutterBinding binding = TestWidgetsFlutterBinding
-        .ensureInitialized();
+  setUpAll(() {
+    registerFallbackValue(CalculationModel());
+  });
+
+  group('Calculation Widget', () {
+    final TestWidgetsFlutterBinding binding =
+        TestWidgetsFlutterBinding.ensureInitialized()
+            as TestWidgetsFlutterBinding;
 
     testWidgets('Display shows "0" initially', (WidgetTester tester) async {
       await _setSize(binding);
 
-      await tester.pumpWidget(
-          _getAppWithMockedSharedPreferences()
-      );
+      await tester.pumpWidget(_getAppWithMockedSharedPreferences());
 
       expect(find.widgetWithText(ResultDisplay, '0'), findsOneWidget);
     });
 
-    testWidgets(
-        'Display shows number when tapped', (WidgetTester tester) async {
+    testWidgets('Display shows number when tapped',
+        (WidgetTester tester) async {
       await _setSize(binding);
 
-      await tester.pumpWidget(
-          _getAppWithMockedSharedPreferences()
-      );
+      await tester.pumpWidget(_getAppWithMockedSharedPreferences());
 
       await tester.tap(find.widgetWithText(CalculatorButton, '3'));
       await tester.pumpAndSettle();
@@ -44,13 +43,11 @@ void main() {
       expect(find.widgetWithText(ResultDisplay, '3'), findsOneWidget);
     });
 
-    testWidgets('Display shows first operand and operator', (
-        WidgetTester tester) async {
+    testWidgets('Display shows first operand and operator',
+        (WidgetTester tester) async {
       await _setSize(binding);
 
-      await tester.pumpWidget(
-          _getAppWithMockedSharedPreferences()
-      );
+      await tester.pumpWidget(_getAppWithMockedSharedPreferences());
 
       await tester.tap(find.widgetWithText(CalculatorButton, '3'));
       await tester.tap(find.widgetWithText(CalculatorButton, 'x'));
@@ -59,13 +56,11 @@ void main() {
       expect(find.widgetWithText(ResultDisplay, '3*'), findsOneWidget);
     });
 
-    testWidgets('Display shows first operand, operator and second operand', (
-        WidgetTester tester) async {
+    testWidgets('Display shows first operand, operator and second operand',
+        (WidgetTester tester) async {
       await _setSize(binding);
 
-      await tester.pumpWidget(
-          _getAppWithMockedSharedPreferences()
-      );
+      await tester.pumpWidget(_getAppWithMockedSharedPreferences());
 
       await tester.tap(find.widgetWithText(CalculatorButton, '3'));
       await tester.tap(find.widgetWithText(CalculatorButton, 'x'));
@@ -75,13 +70,11 @@ void main() {
       expect(find.widgetWithText(ResultDisplay, '3*4'), findsOneWidget);
     });
 
-    testWidgets('Display shows correct result after single calculation', (
-        WidgetTester tester) async {
+    testWidgets('Display shows correct result after single calculation',
+        (WidgetTester tester) async {
       await _setSize(binding);
 
-      await tester.pumpWidget(
-          _getAppWithMockedSharedPreferences()
-      );
+      await tester.pumpWidget(_getAppWithMockedSharedPreferences());
 
       await tester.tap(find.widgetWithText(CalculatorButton, '3'));
       await tester.tap(find.widgetWithText(CalculatorButton, 'x'));
@@ -92,13 +85,11 @@ void main() {
       expect(find.widgetWithText(ResultDisplay, '12'), findsOneWidget);
     });
 
-    testWidgets(
-        'Display shows "0" after clearing', (WidgetTester tester) async {
+    testWidgets('Display shows "0" after clearing',
+        (WidgetTester tester) async {
       await _setSize(binding);
 
-      await tester.pumpWidget(
-          _getAppWithMockedSharedPreferences()
-      );
+      await tester.pumpWidget(_getAppWithMockedSharedPreferences());
 
       await tester.tap(find.widgetWithText(CalculatorButton, '3'));
       await tester.tap(find.widgetWithText(CalculatorButton, 'x'));
@@ -111,13 +102,11 @@ void main() {
     });
 
     testWidgets(
-        'Display shows correct second calculation after chained calculation', (
-        WidgetTester tester) async {
+        'Display shows correct second calculation after chained calculation',
+        (WidgetTester tester) async {
       await _setSize(binding);
 
-      await tester.pumpWidget(
-          _getAppWithMockedSharedPreferences()
-      );
+      await tester.pumpWidget(_getAppWithMockedSharedPreferences());
 
       await tester.tap(find.widgetWithText(CalculatorButton, '3'));
       await tester.tap(find.widgetWithText(CalculatorButton, 'x'));
@@ -130,13 +119,11 @@ void main() {
       expect(find.widgetWithText(ResultDisplay, '12*3'), findsOneWidget);
     });
 
-    testWidgets('Display shows correct result after chained calculation', (
-        WidgetTester tester) async {
+    testWidgets('Display shows correct result after chained calculation',
+        (WidgetTester tester) async {
       await _setSize(binding);
 
-      await tester.pumpWidget(
-          _getAppWithMockedSharedPreferences()
-      );
+      await tester.pumpWidget(_getAppWithMockedSharedPreferences());
 
       await tester.tap(find.widgetWithText(CalculatorButton, '3'));
       await tester.tap(find.widgetWithText(CalculatorButton, 'x'));
@@ -150,13 +137,11 @@ void main() {
       expect(find.widgetWithText(ResultDisplay, '36'), findsOneWidget);
     });
 
-    testWidgets(
-        'Display shows integer after division', (WidgetTester tester) async {
+    testWidgets('Display shows integer after division',
+        (WidgetTester tester) async {
       await _setSize(binding);
 
-      await tester.pumpWidget(
-          _getAppWithMockedSharedPreferences()
-      );
+      await tester.pumpWidget(_getAppWithMockedSharedPreferences());
 
       await tester.tap(find.widgetWithText(CalculatorButton, '2'));
       await tester.tap(find.widgetWithText(CalculatorButton, '0'));
@@ -170,13 +155,11 @@ void main() {
       expect(find.widgetWithText(ResultDisplay, '6'), findsOneWidget);
     });
 
-    testWidgets('Display shows "0" after division by zero', (
-        WidgetTester tester) async {
+    testWidgets('Display shows "0" after division by zero',
+        (WidgetTester tester) async {
       await _setSize(binding);
 
-      await tester.pumpWidget(
-          _getAppWithMockedSharedPreferences()
-      );
+      await tester.pumpWidget(_getAppWithMockedSharedPreferences());
 
       await tester.tap(find.widgetWithText(CalculatorButton, '3'));
       await tester.tap(find.widgetWithText(CalculatorButton, '/'));
@@ -187,14 +170,11 @@ void main() {
       expect(find.widgetWithText(ResultDisplay, '0'), findsOneWidget);
     });
 
-    testWidgets(
-        'Repeatedly pressing "0" does not extend the displayed number', (
-        WidgetTester tester) async {
+    testWidgets('Repeatedly pressing "0" does not extend the displayed number',
+        (WidgetTester tester) async {
       await _setSize(binding);
 
-      await tester.pumpWidget(
-          _getAppWithMockedSharedPreferences()
-      );
+      await tester.pumpWidget(_getAppWithMockedSharedPreferences());
 
       await tester.tap(find.widgetWithText(CalculatorButton, '0'));
       await tester.tap(find.widgetWithText(CalculatorButton, '0'));
@@ -206,38 +186,28 @@ void main() {
       expect(find.widgetWithText(ResultDisplay, '0+0'), findsOneWidget);
     });
 
-    testWidgets('History is shown correctly after single calculation', (
-        WidgetTester tester) async {
+    testWidgets('History is shown correctly after single calculation',
+        (WidgetTester tester) async {
       await _setSize(binding);
 
       CalculationHistoryService mock = MockCalculationHistoryService();
-      when(mock.addEntry(any))
+      when(() => mock.addEntry(any()))
           .thenAnswer((realInvocation) async => true);
-      when(mock.fetchAllEntries())
-          .thenAnswer((realInvocation) =>
-      [
-        CalculationModel(
-            firstOperand: 3,
-            operator: '*',
-            secondOperand: 4,
-            result: 12
-        )
-      ]);
+      when(() => mock.fetchAllEntries()).thenAnswer((realInvocation) => [
+            CalculationModel(
+                firstOperand: 3, operator: '*', secondOperand: 4, result: 12)
+          ]);
 
-      await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider(
-                create: (context) {
-                  return CalculationBloc(
-                      calculationHistoryService: mock
-                  );
-                },
-                child: Calculation(),
-              ),
-            ),
-          )
-      );
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: BlocProvider(
+            create: (context) {
+              return CalculationBloc(calculationHistoryService: mock);
+            },
+            child: Calculation(),
+          ),
+        ),
+      ));
 
       await tester.tap(find.widgetWithText(CalculatorButton, '3'));
       await tester.tap(find.widgetWithText(CalculatorButton, 'x'));
@@ -254,25 +224,17 @@ void main() {
 MaterialApp _getAppWithMockedSharedPreferences() {
   CalculationHistoryService mock = MockCalculationHistoryService();
 
-  when(mock.addEntry(any))
-      .thenAnswer((realInvocation) async => true);
-  when(mock.fetchAllEntries())
-      .thenAnswer((realInvocation) => [
-    CalculationModel(
-        firstOperand: 3,
-        operator: '*',
-        secondOperand: 4,
-        result: 12
-    )
-  ]);
+  when(() => mock.addEntry(any())).thenAnswer((realInvocation) async => true);
+  when(() => mock.fetchAllEntries()).thenAnswer((realInvocation) => [
+        CalculationModel(
+            firstOperand: 3, operator: '*', secondOperand: 4, result: 12)
+      ]);
 
   return MaterialApp(
     home: Scaffold(
       body: BlocProvider(
         create: (context) {
-          return CalculationBloc(
-            calculationHistoryService: mock
-          );
+          return CalculationBloc(calculationHistoryService: mock);
         },
         child: Calculation(),
       ),
