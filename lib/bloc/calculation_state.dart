@@ -7,8 +7,7 @@ abstract class CalculationState extends Equatable {
   final List<CalculationModel> history;
 
   const CalculationState(
-      {required this.calculationModel, required this.history})
-      : assert(calculationModel != null);
+      {required this.calculationModel, required this.history});
 
   @override
   List<Object> get props => [calculationModel, history];
@@ -25,8 +24,7 @@ class CalculationChanged extends CalculationState {
 
   const CalculationChanged(
       {required this.calculationModel, required this.history})
-      : assert(calculationModel != null),
-        super(calculationModel: calculationModel, history: history);
+      : super(calculationModel: calculationModel, history: history);
 
   @override
   List<Object> get props => [calculationModel, history];

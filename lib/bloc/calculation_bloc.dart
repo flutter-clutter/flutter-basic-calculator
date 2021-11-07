@@ -13,8 +13,7 @@ export 'calculation_state.dart';
 
 class CalculationBloc extends Bloc<CalculationEvent, CalculationState> {
   CalculationBloc({required this.calculationHistoryService})
-      : assert(calculationHistoryService != null),
-        super(CalculationInitial());
+      : super(CalculationInitial());
 
   CalculationHistoryService calculationHistoryService;
 

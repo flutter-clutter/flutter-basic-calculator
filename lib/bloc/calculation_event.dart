@@ -7,7 +7,7 @@ abstract class CalculationEvent extends Equatable {
 class NumberPressed extends CalculationEvent {
   final int number;
 
-  const NumberPressed({required this.number}) : assert(number != null);
+  const NumberPressed({required this.number});
 
   @override
   List<Object> get props => [number];
@@ -16,7 +16,7 @@ class NumberPressed extends CalculationEvent {
 class OperatorPressed extends CalculationEvent {
   final String operator;
 
-  const OperatorPressed({required this.operator}) : assert(operator != null);
+  const OperatorPressed({required this.operator});
 
   @override
   List<Object> get props => [operator];

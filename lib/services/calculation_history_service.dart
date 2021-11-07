@@ -7,8 +7,7 @@ import '../calculation_model.dart';
 class CalculationHistoryService {
   static String _sharedPreferenceKey = 'calculation_history';
 
-  CalculationHistoryService({required this.sharedPreferences})
-      : assert(sharedPreferences != null);
+  CalculationHistoryService({required this.sharedPreferences});
 
   SharedPreferences sharedPreferences;
 
@@ -34,7 +33,6 @@ class CalculationHistoryService {
     for (Map<String, dynamic> entry in history) {
       result.add(CalculationModel.fromJson(entry));
     }
-    ;
 
     return result;
   }
