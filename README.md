@@ -2,7 +2,7 @@
 
 A basic calculator app written in Flutter
 
-![The calculator in action](https://www.flutterclutter.dev/wp-content/uploads/2020/07/flutter-basic-caclulator-animation.gif)
+![The calculator in action](https://www.flutterclutter.dev/images/wp-content/uploads/2020/07/flutter-basic-caclulator-animation.gif)
 
 # Article
 
