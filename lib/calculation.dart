@@ -1,13 +1,14 @@
+import 'package:basic_calculator/bloc/calculation_bloc.dart';
 import 'package:basic_calculator/calculation_history_container.dart';
 import 'package:basic_calculator/calculation_model.dart';
+import 'package:basic_calculator/calculator_button.dart';
+import 'package:basic_calculator/result_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'bloc/calculation_bloc.dart';
-import 'calculator_button.dart';
-import 'result_display.dart';
-
 class Calculation extends StatefulWidget {
+  const Calculation({Key? key}) : super(key: key);
+
   @override
   _CalculationState createState() => _CalculationState();
 }
@@ -42,9 +43,10 @@ class _CalculationState extends State<Calculation> {
                 _getButton(text: '8', onTap: () => numberPressed(8)),
                 _getButton(text: '9', onTap: () => numberPressed(9)),
                 _getButton(
-                    text: 'x',
-                    onTap: () => operatorPressed('*'),
-                    backgroundColor: Color.fromRGBO(220, 220, 220, 1)),
+                  text: 'x',
+                  onTap: () => operatorPressed('*'),
+                  backgroundColor: const Color.fromRGBO(220, 220, 220, 1),
+                ),
               ],
             ),
             Row(
@@ -53,9 +55,10 @@ class _CalculationState extends State<Calculation> {
                 _getButton(text: '5', onTap: () => numberPressed(5)),
                 _getButton(text: '6', onTap: () => numberPressed(6)),
                 _getButton(
-                    text: '/',
-                    onTap: () => operatorPressed('/'),
-                    backgroundColor: Color.fromRGBO(220, 220, 220, 1)),
+                  text: '/',
+                  onTap: () => operatorPressed('/'),
+                  backgroundColor: const Color.fromRGBO(220, 220, 220, 1),
+                ),
               ],
             ),
             Row(
@@ -64,32 +67,37 @@ class _CalculationState extends State<Calculation> {
                 _getButton(text: '2', onTap: () => numberPressed(2)),
                 _getButton(text: '3', onTap: () => numberPressed(3)),
                 _getButton(
-                    text: '+',
-                    onTap: () => operatorPressed('+'),
-                    backgroundColor: Color.fromRGBO(220, 220, 220, 1))
+                  text: '+',
+                  onTap: () => operatorPressed('+'),
+                  backgroundColor: const Color.fromRGBO(220, 220, 220, 1),
+                )
               ],
             ),
             Row(
               children: [
                 _getButton(
-                    text: '=',
-                    onTap: calculateResult,
-                    backgroundColor: Colors.orange,
-                    textColor: Colors.white),
+                  text: '=',
+                  onTap: calculateResult,
+                  backgroundColor: Colors.orange,
+                  textColor: Colors.white,
+                ),
                 _getButton(text: '0', onTap: () => numberPressed(0)),
                 _getButton(
-                    text: 'C',
-                    onTap: clear,
-                    backgroundColor: Color.fromRGBO(220, 220, 220, 1)),
+                  text: 'C',
+                  onTap: clear,
+                  backgroundColor: const Color.fromRGBO(220, 220, 220, 1),
+                ),
                 _getButton(
-                    text: '-',
-                    onTap: () => operatorPressed('-'),
-                    backgroundColor: Color.fromRGBO(220, 220, 220, 1)),
+                  text: '-',
+                  onTap: () => operatorPressed('-'),
+                  backgroundColor: const Color.fromRGBO(220, 220, 220, 1),
+                ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
             CalculationHistoryContainer(
-                calculations: state.history.reversed.toList())
+              calculations: state.history.reversed.toList(),
+            )
           ],
         );
       },
@@ -111,19 +119,19 @@ class _CalculationState extends State<Calculation> {
     );
   }
 
-  numberPressed(int number) {
+  void numberPressed(int number) {
     context.read<CalculationBloc>().add(NumberPressed(number: number));
   }
 
-  operatorPressed(String operator) {
+  void operatorPressed(String operator) {
     context.read<CalculationBloc>().add(OperatorPressed(operator: operator));
   }
 
-  calculateResult() {
+  void calculateResult() {
     context.read<CalculationBloc>().add(CalculateResult());
   }
 
-  clear() {
+  void clear() {
     context.read<CalculationBloc>().add(ClearCalculation());
   }
 
@@ -144,6 +152,6 @@ class _CalculationState extends State<Calculation> {
       return '${model.firstOperand}';
     }
 
-    return "${model.result ?? 0}";
+    return '${model.result ?? 0}';
   }
 }

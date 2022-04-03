@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class CalculationModel extends Equatable {
-  CalculationModel({
+  const CalculationModel({
     this.firstOperand,
     this.operator,
     this.secondOperand,
@@ -13,8 +13,12 @@ class CalculationModel extends Equatable {
   final int? secondOperand;
   final int? result;
 
-  CalculationModel copyWith(
-      {int? firstOperand, String? operator, int? secondOperand, int? result}) {
+  CalculationModel copyWith({
+    int? firstOperand,
+    String? operator,
+    int? secondOperand,
+    int? result,
+  }) {
     return CalculationModel(
       firstOperand: firstOperand ?? this.firstOperand,
       operator: operator ?? this.operator,
@@ -24,10 +28,10 @@ class CalculationModel extends Equatable {
   }
 
   CalculationModel.fromJson(Map<String, dynamic> json)
-      : firstOperand = json['firstOperand'],
-        operator = json['operator'],
-        secondOperand = json['secondOperand'],
-        result = json['result'];
+      : firstOperand = json['firstOperand'] as int?,
+        operator = json['operator'] as String?,
+        secondOperand = json['secondOperand'] as int?,
+        result = json['result'] as int?;
 
   Map<String, dynamic> toJson() => {
         'firstOperand': firstOperand,
@@ -38,7 +42,7 @@ class CalculationModel extends Equatable {
 
   @override
   String toString() {
-    return "$firstOperand$operator$secondOperand=$result";
+    return '$firstOperand$operator$secondOperand=$result';
   }
 
   @override

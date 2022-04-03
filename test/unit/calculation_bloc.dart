@@ -10,193 +10,200 @@ class MockCalculationHistoryService extends Mock
 
 void main() {
   setUpAll(() {
-    registerFallbackValue(CalculationModel());
+    registerFallbackValue(const CalculationModel());
   });
 
   group('CalculationBloc', () {
     blocTest(
       'emits [] when nothing is added',
       build: () => CalculationBloc(
-          calculationHistoryService: MockCalculationHistoryService()),
+        calculationHistoryService: MockCalculationHistoryService(),
+      ),
       expect: () => [],
     );
 
     blocTest(
       'first operand is set on number pressed',
       build: () => CalculationBloc(
-          calculationHistoryService: MockCalculationHistoryService()),
-      act: (CalculationBloc bloc) => bloc.add(NumberPressed(number: 1)),
+        calculationHistoryService: MockCalculationHistoryService(),
+      ),
+      act: (CalculationBloc bloc) => bloc.add(
+        const NumberPressed(number: 1),
+      ),
       expect: () => [
-        CalculationChanged(
-            calculationModel: CalculationModel(
-              firstOperand: 1,
-              operator: null,
-              secondOperand: null,
-              result: null,
-            ),
-            history: []),
+        const CalculationChanged(
+          calculationModel: CalculationModel(
+            firstOperand: 1,
+          ),
+          history: [],
+        ),
       ],
     );
 
     blocTest(
       'first operand is concatenated when number pressed repeatedly',
       build: () {
-        CalculationBloc bloc = CalculationBloc(
-            calculationHistoryService: MockCalculationHistoryService());
-        bloc.add(NumberPressed(number: 1));
+        final CalculationBloc bloc = CalculationBloc(
+          calculationHistoryService: MockCalculationHistoryService(),
+        );
+        bloc.add(const NumberPressed(number: 1));
         return bloc;
       },
       skip: 1,
-      act: (CalculationBloc bloc) => bloc.add(NumberPressed(number: 1)),
+      act: (CalculationBloc bloc) => bloc.add(const NumberPressed(number: 1)),
       expect: () => [
-        CalculationChanged(
-            calculationModel: CalculationModel(
-              firstOperand: 11,
-              operator: null,
-              secondOperand: null,
-              result: null,
-            ),
-            history: [])
+        const CalculationChanged(
+          calculationModel: CalculationModel(
+            firstOperand: 11,
+          ),
+          history: [],
+        )
       ],
     );
 
     blocTest(
       'operator is set when valid operator pressed and first operand is set',
       build: () {
-        CalculationBloc bloc = CalculationBloc(
-            calculationHistoryService: MockCalculationHistoryService());
-        bloc.add(NumberPressed(number: 1));
+        final CalculationBloc bloc = CalculationBloc(
+          calculationHistoryService: MockCalculationHistoryService(),
+        );
+        bloc.add(const NumberPressed(number: 1));
         return bloc;
       },
       skip: 1,
-      act: (CalculationBloc bloc) => bloc.add(OperatorPressed(operator: '+')),
+      act: (CalculationBloc bloc) =>
+          bloc.add(const OperatorPressed(operator: '+')),
       expect: () => [
-        CalculationChanged(
-            calculationModel: CalculationModel(
-              firstOperand: 1,
-              operator: '+',
-              secondOperand: null,
-              result: null,
-            ),
-            history: [])
+        const CalculationChanged(
+          calculationModel: CalculationModel(
+            firstOperand: 1,
+            operator: '+',
+          ),
+          history: [],
+        )
       ],
     );
 
     blocTest(
       'operator is not set when invalid operator pressed and first operand is set',
       build: () {
-        CalculationBloc bloc = CalculationBloc(
-            calculationHistoryService: MockCalculationHistoryService());
-        bloc.add(NumberPressed(number: 1));
+        final CalculationBloc bloc = CalculationBloc(
+          calculationHistoryService: MockCalculationHistoryService(),
+        );
+        bloc.add(const NumberPressed(number: 1));
         return bloc;
       },
       skip: 1,
-      act: (CalculationBloc bloc) => bloc.add(OperatorPressed(operator: 'x')),
+      act: (CalculationBloc bloc) =>
+          bloc.add(const OperatorPressed(operator: 'x')),
       expect: () => [],
     );
 
     blocTest(
       'second operand is set when first operand and operator is set and number pressed',
       build: () {
-        CalculationBloc bloc = CalculationBloc(
-            calculationHistoryService: MockCalculationHistoryService());
-        bloc.add(NumberPressed(number: 1));
-        bloc.add(OperatorPressed(operator: '+'));
+        final CalculationBloc bloc = CalculationBloc(
+          calculationHistoryService: MockCalculationHistoryService(),
+        );
+        bloc.add(const NumberPressed(number: 1));
+        bloc.add(const OperatorPressed(operator: '+'));
         return bloc;
       },
       skip: 2,
-      act: (CalculationBloc bloc) => bloc.add(NumberPressed(number: 2)),
+      act: (CalculationBloc bloc) => bloc.add(const NumberPressed(number: 2)),
       expect: () => [
-        CalculationChanged(
-            calculationModel: CalculationModel(
-              firstOperand: 1,
-              operator: '+',
-              secondOperand: 2,
-              result: null,
-            ),
-            history: [])
+        const CalculationChanged(
+          calculationModel: CalculationModel(
+            firstOperand: 1,
+            operator: '+',
+            secondOperand: 2,
+          ),
+          history: [],
+        )
       ],
     );
 
     blocTest(
       'first operand is concatenated when number pressed repeatedly',
       build: () {
-        CalculationBloc bloc = CalculationBloc(
-            calculationHistoryService: MockCalculationHistoryService());
-        bloc.add(NumberPressed(number: 1));
-        bloc.add(OperatorPressed(operator: '+'));
-        bloc.add(NumberPressed(number: 3));
-        bloc.add(NumberPressed(number: 3));
+        final CalculationBloc bloc = CalculationBloc(
+          calculationHistoryService: MockCalculationHistoryService(),
+        );
+        bloc.add(const NumberPressed(number: 1));
+        bloc.add(const OperatorPressed(operator: '+'));
+        bloc.add(const NumberPressed(number: 3));
+        bloc.add(const NumberPressed(number: 3));
         return bloc;
       },
       skip: 4,
-      act: (CalculationBloc bloc) => bloc.add(NumberPressed(number: 7)),
+      act: (CalculationBloc bloc) => bloc.add(const NumberPressed(number: 7)),
       expect: () => [
-        CalculationChanged(
-            calculationModel: CalculationModel(
-              firstOperand: 1,
-              operator: '+',
-              secondOperand: 337,
-              result: null,
-            ),
-            history: [])
+        const CalculationChanged(
+          calculationModel: CalculationModel(
+            firstOperand: 1,
+            operator: '+',
+            secondOperand: 337,
+          ),
+          history: [],
+        )
       ],
     );
 
     blocTest(
       'first operand is not concatenated when repeated number starts with zero',
       build: () {
-        CalculationBloc bloc = CalculationBloc(
-            calculationHistoryService: MockCalculationHistoryService());
-        bloc.add(NumberPressed(number: 0));
-        bloc.add(NumberPressed(number: 0));
-        bloc.add(OperatorPressed(operator: '+'));
+        final CalculationBloc bloc = CalculationBloc(
+          calculationHistoryService: MockCalculationHistoryService(),
+        );
+        bloc.add(const NumberPressed(number: 0));
+        bloc.add(const NumberPressed(number: 0));
+        bloc.add(const OperatorPressed(operator: '+'));
         return bloc;
       },
       skip: 2,
-      act: (CalculationBloc bloc) => bloc.add(NumberPressed(number: 0)),
+      act: (CalculationBloc bloc) => bloc.add(const NumberPressed(number: 0)),
       expect: () => [
-        CalculationChanged(
-            calculationModel: CalculationModel(
-              firstOperand: 0,
-              operator: '+',
-              secondOperand: 0,
-              result: null,
-            ),
-            history: [])
+        const CalculationChanged(
+          calculationModel: CalculationModel(
+            firstOperand: 0,
+            operator: '+',
+            secondOperand: 0,
+          ),
+          history: [],
+        )
       ],
     );
 
     blocTest(
       'result is set when first operand, operator and second operand are set and result is requested',
       build: () {
-        CalculationBloc bloc = CalculationBloc(
-            calculationHistoryService: MockCalculationHistoryService());
-        bloc.add(NumberPressed(number: 1));
-        bloc.add(OperatorPressed(operator: '+'));
-        bloc.add(NumberPressed(number: 432));
+        final CalculationBloc bloc = CalculationBloc(
+          calculationHistoryService: MockCalculationHistoryService(),
+        );
+        bloc.add(const NumberPressed(number: 1));
+        bloc.add(const OperatorPressed(operator: '+'));
+        bloc.add(const NumberPressed(number: 432));
         return bloc;
       },
       skip: 3,
       act: (CalculationBloc bloc) => bloc.add(CalculateResult()),
       expect: () => [
-        CalculationChanged(
-            calculationModel: CalculationModel(
-              firstOperand: 433,
-              operator: null,
-              secondOperand: null,
-              result: null,
-            ),
-            history: [])
+        const CalculationChanged(
+          calculationModel: CalculationModel(
+            firstOperand: 433,
+          ),
+          history: [],
+        )
       ],
     );
 
     blocTest(
       'result is not set when second operand and operator are not set and result is requested',
       build: () {
-        CalculationBloc bloc = CalculationBloc(
-            calculationHistoryService: MockCalculationHistoryService());
-        bloc.add(NumberPressed(number: 1));
+        final CalculationBloc bloc = CalculationBloc(
+          calculationHistoryService: MockCalculationHistoryService(),
+        );
+        bloc.add(const NumberPressed(number: 1));
         return bloc;
       },
       skip: 2,
@@ -207,10 +214,11 @@ void main() {
     blocTest(
       'result is not set when second operand is not set and result is requested',
       build: () {
-        CalculationBloc bloc = CalculationBloc(
-            calculationHistoryService: MockCalculationHistoryService());
-        bloc.add(NumberPressed(number: 1));
-        bloc.add(OperatorPressed(operator: '+'));
+        final CalculationBloc bloc = CalculationBloc(
+          calculationHistoryService: MockCalculationHistoryService(),
+        );
+        bloc.add(const NumberPressed(number: 1));
+        bloc.add(const OperatorPressed(operator: '+'));
         return bloc;
       },
       skip: 2,
@@ -221,151 +229,142 @@ void main() {
     blocTest(
       'calculation is reset when clear button is pressed',
       build: () {
-        CalculationBloc bloc = CalculationBloc(
-            calculationHistoryService: MockCalculationHistoryService());
-        bloc.add(NumberPressed(number: 1));
-        bloc.add(OperatorPressed(operator: '/'));
-        bloc.add(NumberPressed(number: 10));
+        final CalculationBloc bloc = CalculationBloc(
+          calculationHistoryService: MockCalculationHistoryService(),
+        );
+        bloc.add(const NumberPressed(number: 1));
+        bloc.add(const OperatorPressed(operator: '/'));
+        bloc.add(const NumberPressed(number: 10));
         return bloc;
       },
       skip: 3,
       act: (CalculationBloc bloc) => bloc.add(ClearCalculation()),
       expect: () => [
-        CalculationChanged(
-            calculationModel: CalculationModel(
-              firstOperand: null,
-              operator: null,
-              secondOperand: null,
-              result: null,
-            ),
-            history: [])
+        const CalculationChanged(
+          calculationModel: CalculationModel(),
+          history: [],
+        )
       ],
     );
 
     blocTest(
       'adding numbers works',
       build: () {
-        CalculationBloc bloc = CalculationBloc(
-            calculationHistoryService: MockCalculationHistoryService());
-        bloc.add(NumberPressed(number: 10));
-        bloc.add(OperatorPressed(operator: '+'));
-        bloc.add(NumberPressed(number: 123));
+        final CalculationBloc bloc = CalculationBloc(
+          calculationHistoryService: MockCalculationHistoryService(),
+        );
+        bloc.add(const NumberPressed(number: 10));
+        bloc.add(const OperatorPressed(operator: '+'));
+        bloc.add(const NumberPressed(number: 123));
         return bloc;
       },
       skip: 3,
       act: (CalculationBloc bloc) => bloc.add(CalculateResult()),
       expect: () => [
-        CalculationChanged(
-            calculationModel: CalculationModel(
-              firstOperand: 133,
-              operator: null,
-              secondOperand: null,
-              result: null,
-            ),
-            history: [])
+        const CalculationChanged(
+          calculationModel: CalculationModel(
+            firstOperand: 133,
+          ),
+          history: [],
+        )
       ],
     );
 
     blocTest(
       'subtracting numbers works',
       build: () {
-        CalculationBloc bloc = CalculationBloc(
-            calculationHistoryService: MockCalculationHistoryService());
-        bloc.add(NumberPressed(number: 123));
-        bloc.add(OperatorPressed(operator: '-'));
-        bloc.add(NumberPressed(number: 10));
+        final CalculationBloc bloc = CalculationBloc(
+          calculationHistoryService: MockCalculationHistoryService(),
+        );
+        bloc.add(const NumberPressed(number: 123));
+        bloc.add(const OperatorPressed(operator: '-'));
+        bloc.add(const NumberPressed(number: 10));
         return bloc;
       },
       skip: 3,
       act: (CalculationBloc bloc) => bloc.add(CalculateResult()),
       expect: () => [
-        CalculationChanged(
-            calculationModel: CalculationModel(
-              firstOperand: 113,
-              operator: null,
-              secondOperand: null,
-              result: null,
-            ),
-            history: [])
+        const CalculationChanged(
+          calculationModel: CalculationModel(
+            firstOperand: 113,
+          ),
+          history: [],
+        )
       ],
     );
 
     blocTest(
       'multiplying numbers works',
       build: () {
-        CalculationBloc bloc = CalculationBloc(
-            calculationHistoryService: MockCalculationHistoryService());
-        bloc.add(NumberPressed(number: 123));
-        bloc.add(OperatorPressed(operator: '*'));
-        bloc.add(NumberPressed(number: 10));
+        final CalculationBloc bloc = CalculationBloc(
+          calculationHistoryService: MockCalculationHistoryService(),
+        );
+        bloc.add(const NumberPressed(number: 123));
+        bloc.add(const OperatorPressed(operator: '*'));
+        bloc.add(const NumberPressed(number: 10));
         return bloc;
       },
       skip: 3,
       act: (CalculationBloc bloc) => bloc.add(CalculateResult()),
       expect: () => [
-        CalculationChanged(
-            calculationModel: CalculationModel(
-              firstOperand: 1230,
-              operator: null,
-              secondOperand: null,
-              result: null,
-            ),
-            history: [])
+        const CalculationChanged(
+          calculationModel: CalculationModel(
+            firstOperand: 1230,
+          ),
+          history: [],
+        )
       ],
     );
 
     blocTest(
       'dividing numbers works',
       build: () {
-        CalculationBloc bloc = CalculationBloc(
-            calculationHistoryService: MockCalculationHistoryService());
-        bloc.add(NumberPressed(number: 123));
-        bloc.add(OperatorPressed(operator: '/'));
-        bloc.add(NumberPressed(number: 10));
+        final CalculationBloc bloc = CalculationBloc(
+          calculationHistoryService: MockCalculationHistoryService(),
+        );
+        bloc.add(const NumberPressed(number: 123));
+        bloc.add(const OperatorPressed(operator: '/'));
+        bloc.add(const NumberPressed(number: 10));
         return bloc;
       },
       skip: 3,
       act: (CalculationBloc bloc) => bloc.add(CalculateResult()),
       expect: () => [
-        CalculationChanged(
-            calculationModel: CalculationModel(
-              firstOperand: 12,
-              operator: null,
-              secondOperand: null,
-              result: null,
-            ),
-            history: [])
+        const CalculationChanged(
+          calculationModel: CalculationModel(
+            firstOperand: 12,
+          ),
+          history: [],
+        )
       ],
     );
 
     blocTest(
       'dividing by zero results in a calculation with result: 0',
       build: () {
-        CalculationBloc bloc = CalculationBloc(
-            calculationHistoryService: MockCalculationHistoryService());
-        bloc.add(NumberPressed(number: 123));
-        bloc.add(OperatorPressed(operator: '/'));
-        bloc.add(NumberPressed(number: 0));
+        final CalculationBloc bloc = CalculationBloc(
+          calculationHistoryService: MockCalculationHistoryService(),
+        );
+        bloc.add(const NumberPressed(number: 123));
+        bloc.add(const OperatorPressed(operator: '/'));
+        bloc.add(const NumberPressed(number: 0));
         return bloc;
       },
       skip: 3,
       act: (CalculationBloc bloc) => bloc.add(CalculateResult()),
       expect: () => [
-        CalculationChanged(
-            calculationModel: CalculationModel(
-                firstOperand: 0,
-                operator: null,
-                secondOperand: null,
-                result: null),
-            history: [])
+        const CalculationChanged(
+          calculationModel: CalculationModel(firstOperand: 0),
+          history: [],
+        )
       ],
     );
 
     blocTest(
       'executing a calculation writes to the history and returns that result',
       build: () {
-        CalculationHistoryService mock = MockCalculationHistoryService();
-        CalculationModel expectedResultModel = CalculationModel(
+        final CalculationHistoryService mock = MockCalculationHistoryService();
+        const CalculationModel expectedResultModel = CalculationModel(
           firstOperand: 123,
           operator: '+',
           secondOperand: 123,
@@ -378,10 +377,11 @@ void main() {
           (realInvocation) async => true,
         );
 
-        CalculationBloc bloc = CalculationBloc(calculationHistoryService: mock);
-        bloc.add(NumberPressed(number: 123));
-        bloc.add(OperatorPressed(operator: '+'));
-        bloc.add(NumberPressed(number: 123));
+        final CalculationBloc bloc =
+            CalculationBloc(calculationHistoryService: mock);
+        bloc.add(const NumberPressed(number: 123));
+        bloc.add(const OperatorPressed(operator: '+'));
+        bloc.add(const NumberPressed(number: 123));
         return bloc;
       },
       skip: 3,
@@ -392,20 +392,13 @@ void main() {
         verify(() => bloc.calculationHistoryService.addEntry(any())).called(1);
       },
       expect: () => [
-        CalculationChanged(
-          calculationModel: CalculationModel(
-              firstOperand: 246,
-              operator: null,
-              secondOperand: null,
-              result: null),
+        const CalculationChanged(
+          calculationModel: CalculationModel(firstOperand: 246),
           history: [],
         ),
-        CalculationChanged(
+        const CalculationChanged(
           calculationModel: CalculationModel(
             firstOperand: 246,
-            operator: null,
-            secondOperand: null,
-            result: null,
           ),
           history: [
             CalculationModel(

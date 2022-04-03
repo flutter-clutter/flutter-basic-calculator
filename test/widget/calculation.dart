@@ -15,7 +15,7 @@ class MockCalculationHistoryService extends Mock
 
 void main() {
   setUpAll(() {
-    registerFallbackValue(CalculationModel());
+    registerFallbackValue(const CalculationModel());
   });
 
   group('Calculation Widget', () {
@@ -190,24 +190,32 @@ void main() {
         (WidgetTester tester) async {
       await _setSize(binding);
 
-      CalculationHistoryService mock = MockCalculationHistoryService();
+      final CalculationHistoryService mock = MockCalculationHistoryService();
       when(() => mock.addEntry(any()))
           .thenAnswer((realInvocation) async => true);
-      when(() => mock.fetchAllEntries()).thenAnswer((realInvocation) => [
-            CalculationModel(
-                firstOperand: 3, operator: '*', secondOperand: 4, result: 12)
-          ]);
+      when(() => mock.fetchAllEntries()).thenAnswer(
+        (realInvocation) => [
+          const CalculationModel(
+            firstOperand: 3,
+            operator: '*',
+            secondOperand: 4,
+            result: 12,
+          )
+        ],
+      );
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: BlocProvider(
-            create: (context) {
-              return CalculationBloc(calculationHistoryService: mock);
-            },
-            child: Calculation(),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: BlocProvider(
+              create: (context) {
+                return CalculationBloc(calculationHistoryService: mock);
+              },
+              child: const Calculation(),
+            ),
           ),
         ),
-      ));
+      );
 
       await tester.tap(find.widgetWithText(CalculatorButton, '3'));
       await tester.tap(find.widgetWithText(CalculatorButton, 'x'));
@@ -215,20 +223,28 @@ void main() {
       await tester.tap(find.widgetWithText(CalculatorButton, '='));
       await tester.pumpAndSettle();
 
-      expect(find.widgetWithText(CalculationHistoryContainer, '3 * 4 = 12'),
-          findsOneWidget);
+      expect(
+        find.widgetWithText(CalculationHistoryContainer, '3 * 4 = 12'),
+        findsOneWidget,
+      );
     });
   });
 }
 
 MaterialApp _getAppWithMockedSharedPreferences() {
-  CalculationHistoryService mock = MockCalculationHistoryService();
+  final CalculationHistoryService mock = MockCalculationHistoryService();
 
   when(() => mock.addEntry(any())).thenAnswer((realInvocation) async => true);
-  when(() => mock.fetchAllEntries()).thenAnswer((realInvocation) => [
-        CalculationModel(
-            firstOperand: 3, operator: '*', secondOperand: 4, result: 12)
-      ]);
+  when(() => mock.fetchAllEntries()).thenAnswer(
+    (realInvocation) => [
+      const CalculationModel(
+        firstOperand: 3,
+        operator: '*',
+        secondOperand: 4,
+        result: 12,
+      )
+    ],
+  );
 
   return MaterialApp(
     home: Scaffold(
@@ -236,12 +252,12 @@ MaterialApp _getAppWithMockedSharedPreferences() {
         create: (context) {
           return CalculationBloc(calculationHistoryService: mock);
         },
-        child: Calculation(),
+        child: const Calculation(),
       ),
     ),
   );
 }
 
 Future _setSize(TestWidgetsFlutterBinding binding) async {
-  await binding.setSurfaceSize(Size(1080, 2340));
+  await binding.setSurfaceSize(const Size(1080, 2340));
 }

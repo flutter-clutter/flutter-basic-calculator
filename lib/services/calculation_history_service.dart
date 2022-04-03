@@ -1,18 +1,17 @@
 import 'dart:convert';
 
+import 'package:basic_calculator/calculation_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../calculation_model.dart';
-
 class CalculationHistoryService {
-  static String _sharedPreferenceKey = 'calculation_history';
+  static const String _sharedPreferenceKey = 'calculation_history';
 
   CalculationHistoryService({required this.sharedPreferences});
 
   SharedPreferences sharedPreferences;
 
   List<CalculationModel> fetchAllEntries() {
-    List<CalculationModel> result = <CalculationModel>[];
+    final List<CalculationModel> result = <CalculationModel>[];
 
     if (!sharedPreferences.containsKey(_sharedPreferenceKey)) {
       return [];
@@ -21,27 +20,30 @@ class CalculationHistoryService {
     List<dynamic> history = [];
 
     try {
-      String? storedValue = sharedPreferences.getString(_sharedPreferenceKey);
+      final String? storedValue =
+          sharedPreferences.getString(_sharedPreferenceKey);
       if (storedValue == null) {
         return [];
       }
-      history = jsonDecode(storedValue);
+      history = jsonDecode(storedValue) as List<dynamic>;
     } on FormatException {
       sharedPreferences.remove(_sharedPreferenceKey);
     }
 
-    for (Map<String, dynamic> entry in history) {
-      result.add(CalculationModel.fromJson(entry));
+    for (final dynamic entry in history) {
+      result.add(CalculationModel.fromJson(entry as Map<String, dynamic>));
     }
 
     return result;
   }
 
   Future<bool> addEntry(CalculationModel model) async {
-    List<CalculationModel> allEntries = fetchAllEntries();
+    final List<CalculationModel> allEntries = fetchAllEntries();
     allEntries.add(model);
 
     return sharedPreferences.setString(
-        _sharedPreferenceKey, jsonEncode(allEntries));
+      _sharedPreferenceKey,
+      jsonEncode(allEntries),
+    );
   }
 }
